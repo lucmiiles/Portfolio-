@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wealth Portfolio</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    :root {
+        --bg-primary: #000000;
+        --bg-secondary: #0a0a0a;
+        --bg-card: #111111;
+        --border-primary: #1a1a1a;
+        --border-hover: #333333;
+        --text-primary: #ffffff;
+        --text-secondary: #808080;
+        --text-tertiary: #4d4d4d;
+        --accent-positive: #00ff88;
+        --accent-negative: #ff3366;
+        --accent-neutral: #ffffff;
+        --spacing-section: 6rem;
+        --spacing-card: 1.5rem;
+    }
+
+    body {
+        font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        line-height: 1.6;
+    }
+
+    /* Login Screen - Minimal Black/White/Beige with Rounded Corners */
+    .login-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 2rem;
+        background-color: #d4c5b0;
+    }
+
+    .login-box {
+        background-color: #0a0a0a;
+        border: 2px solid #1a1a1a;
+        border-radius: 1.5rem;
+        padding: 3.5rem 3rem;
+        max-width: 460px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .login-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #ffffff;
+    }
+
+    .login-subtitle {
+        color: #d4c5b0;
+        margin-bottom: 0;
+        font-size: 0.9rem;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+    }
+
+    .login-form {
+        position: relative;
+    }
+
+    .login-input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .login-input {
+        width: 100%;
+        padding: 1.25rem 1.5rem;
+        background-color: #000000;
+        border: 2px solid #333333;
+        border-radius: 1rem;
+        color: #ffffff;
+        font-size: 1rem;
+        font-family: 'Manrope', sans-serif;
+        transition: all 0.2s;
+        font-weight: 600;
+    }
+
+    .login-input:focus {
+        outline: none;
+        border-color: #d4c5b0;
+        background-color: #0a0a0a;
+    }
+
+    .login-input::placeholder {
+        color: #666666;
+    }
+
+    .login-button {
+        width: 100%;
+        padding: 1.25rem;
+        background-color: #ffffff;
+        color: #000000;
+        border: 2px solid #ffffff;
+        border-radius: 1rem;
+        font-size: 0.95rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-top: 0.5rem;
+    }
+
+    .login-button:hover {
+        background-color: #d4c5b0;
+        border-color: #d4c5b0;
+        transform: translateY(-2px);
+    }
+
+    .login-button:active {
+        transform: translateY(0);
+    }
+
+    .error-message {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: rgba(255, 51, 102, 0.1);
+        border: 2px solid #ff3366;
+        border-radius: 1rem;
+        color: #ff3366;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* Header */
+    .header-container {
+        position: sticky;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border-primary);
+        z-index: 1000;
+        padding: 1.5rem 0;
+    }
+
+    .header-wrapper {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--text-primary);
+    }
+
+    .header-logout {
+        padding: 0.625rem 1.25rem;
+        background-color: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .header-logout:hover {
+        color: var(--text-primary);
+        border-color: var(--text-primary);
+    }
+
+    /* Navigation - Outside Header */
+    .nav-container {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        max-width: 600px;
+        width: calc(100% - 4rem);
+    }
+
+    .floating-nav {
+        display: flex;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 100px;
+        padding: 0.75rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .nav-item {
+        flex: 1;
+        padding: 0.875rem 1.25rem;
+        background-color: transparent;
+        color: #ffffff;
+        border: 1px solid transparent;
+        border-radius: 100px;
+        font-size: 0.875rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .nav-item:hover {
+        background-color: rgba(212, 197, 176, 0.2);
+        color: #d4c5b0;
+        border-color: rgba(212, 197, 176, 0.3);
+    }
+
+    .nav-item.active {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: #d4c5b0;
+        border-color: rgba(212, 197, 176, 0.3);
+    }
+
+    /* Main Container */
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem 8rem;
+    }
+
+    .section {
+        margin-top: var(--spacing-section);
+        scroll-margin-top: 120px;
+    }
+
+    .section:first-child {
+        margin-top: 3rem;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1rem;
+    }
+
+    .section-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    .section-button {
+        padding: 0.625rem 1.25rem;
+        background-color: var(--bg-card);
+        color: var(--text-primary);
+        border: 1px solid var(--border-primary);
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .section-button:hover {
+        background-color: var(--text-primary);
+        color: var(--bg-primary);
+        border-color: var(--text-primary);
+    }
+
+    /* Grid System */
+    .grid {
+        display: grid;
+        gap: var(--spacing-card);
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .grid-2 {
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    }
+
+    @media (max-width: 768px) {
+        .grid-2, .grid-3 {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Card Styles */
+    .card {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card:hover {
+        border-color: var(--border-hover);
+        transform: translateY(-2px);
+    }
+
+    .card-highlight {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-highlight::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--accent-positive), transparent);
+    }
+
+    .card-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text-secondary);
+    }
+
+    .card-edit-btn {
+        background: none;
+        border: none;
+        color: inherit;
+        cursor: pointer;
+        font-size: 1rem;
+        opacity: 0.3;
+        transition: opacity 0.2s;
+    }
+
+    .card-edit-btn:hover {
+        opacity: 1;
+    }
+
+    .card-value {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        letter-spacing: -0.03em;
+        font-family: 'Manrope', monospace;
+    }
+
+    @media (max-width: 768px) {
+        .card-value {
+            font-size: 2.25rem;
+        }
+    }
+
+    .editable-value {
+        cursor: pointer;
+        padding: 0.25rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.2s;
+    }
+
+    .editing .editable-value:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .editing .card .editable-value:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .value-input {
+        background-color: transparent;
+        border: 2px solid var(--accent-positive);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        font-size: 3rem;
+        font-weight: 800;
+        color: inherit;
+        width: 100%;
+        font-family: 'Manrope', monospace;
+    }
+
+    .value-input:focus {
+        outline: none;
+    }
+
+    .card-subtitle {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.5rem 0.875rem;
+        border-radius: 100px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        background-color: rgba(0, 255, 136, 0.1);
+        color: var(--accent-positive);
+        border: 1px solid rgba(0, 255, 136, 0.2);
+    }
+
+    /* Goal Tracking - Sleek Redesign */
+    .goal-card {
+        position: relative;
+        background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-primary) 100%);
+        border: 1px solid var(--border-primary);
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        overflow: hidden;
+    }
+
+    .goal-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--accent-positive), transparent);
+    }
+
+    .goal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+        gap: 1rem;
+    }
+
+    .goal-info {
+        flex: 1;
+    }
+
+    .goal-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-bottom: 0.75rem;
+    }
+
+    .goal-amount {
+        font-size: 2.5rem;
+        font-weight: 800;
+        font-family: 'Manrope', monospace;
+        letter-spacing: -0.02em;
+        color: var(--text-primary);
+    }
+
+    .goal-edit-btn {
+        padding: 0.625rem 1.25rem;
+        background-color: rgba(0, 255, 136, 0.1);
+        color: var(--accent-positive);
+        border: 1px solid rgba(0, 255, 136, 0.2);
+        border-radius: 0.75rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .goal-edit-btn:hover {
+        background-color: var(--accent-positive);
+        color: #000000;
+        border-color: var(--accent-positive);
+        transform: translateY(-2px);
+    }
+
+    .progress-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 1rem;
+    }
+
+    .progress-label {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        font-weight: 600;
+    }
+
+    .progress-percentage {
+        font-size: 1.5rem;
+        font-weight: 800;
+        font-family: 'Manrope', monospace;
+        color: var(--accent-positive);
+    }
+
+    .progress-bar-container {
+        width: 100%;
+        height: 1rem;
+        background-color: rgba(0, 0, 0, 0.4);
+        border-radius: 100px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent-positive) 0%, #00cc6f 100%);
+        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 100px;
+        position: relative;
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+    }
+
+    .progress-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    .goal-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .goal-metric {
+        padding: 1.5rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 1rem;
+        transition: all 0.2s;
+    }
+
+    .goal-metric:hover {
+        background-color: rgba(0, 0, 0, 0.5);
+        border-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .goal-metric-value {
+        font-size: 2rem;
+        font-weight: 800;
+        font-family: 'Manrope', monospace;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+    }
+
+    .goal-metric-label {
+        font-size: 0.7rem;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+        .goal-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .goal-amount {
+            font-size: 2rem;
+        }
+
+        .progress-percentage {
+            font-size: 1.25rem;
+        }
+
+        .goal-metric-value {
+            font-size: 1.5rem;
+        }
+
+        .goal-metrics {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+    }
+
+    /* Transactions - Ultra Modern & Sleek */
+    .transaction-header-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .transaction-stat-box {
+        position: relative;
+        padding: 2.5rem 2rem;
+        background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-primary) 100%);
+        border: 1px solid var(--border-primary);
+        border-radius: 1.25rem;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .transaction-stat-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--accent-positive), transparent);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .transaction-stat-box.income::before {
+        background: linear-gradient(90deg, transparent, var(--accent-positive), transparent);
+    }
+
+    .transaction-stat-box.expense::before {
+        background: linear-gradient(90deg, transparent, var(--accent-negative), transparent);
+    }
+
+    .transaction-stat-box:hover {
+        border-color: var(--border-hover);
+        transform: translateY(-4px);
+    }
+
+    .transaction-stat-box:hover::before {
+        opacity: 1;
+    }
+
+    .transaction-stat-label {
+        font-size: 0.7rem;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .transaction-stat-amount {
+        font-size: 2.75rem;
+        font-weight: 800;
+        font-family: 'Manrope', monospace;
+        letter-spacing: -0.03em;
+        line-height: 1;
+    }
+
+    .stat-income {
+        color: var(--accent-positive);
+    }
+
+    .stat-expense {
+        color: var(--accent-negative);
+    }
+
+    .stat-net {
+        color: var(--text-primary);
+    }
+
+    /* Transaction List - Sleek Cards */
+    .transaction-list-modern {
+        display: grid;
+        gap: 0.75rem;
+        max-height: 600px;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+    }
+
+    .transaction-card {
+        position: relative;
+        display: grid;
+        grid-template-columns: auto 1fr auto auto;
+        gap: 1.5rem;
+        align-items: center;
+        padding: 1.5rem;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+    }
+
+    .transaction-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--border-primary);
+        transition: all 0.3s;
+    }
+
+    .transaction-card.income::before {
+        background: var(--accent-positive);
+    }
+
+    .transaction-card.expense::before {
+        background: var(--accent-negative);
+    }
+
+    .transaction-card:hover {
+        border-color: var(--border-hover);
+        transform: translateX(6px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .transaction-card:hover::before {
+        width: 6px;
+    }
+
+    .transaction-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.75rem;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .transaction-icon.income {
+        background: rgba(0, 255, 136, 0.1);
+        border: 1px solid rgba(0, 255, 136, 0.2);
+    }
+
+    .transaction-icon.expense {
+        background: rgba(255, 51, 102, 0.1);
+        border: 1px solid rgba(255, 51, 102, 0.2);
+    }
+
+    .transaction-details {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .transaction-details-title {
+        font-weight: 700;
+        font-size: 1rem;
+        margin-bottom: 0.375rem;
+        color: var(--text-primary);
+    }
+
+    .transaction-details-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.8rem;
+        color: var(--text-tertiary);
+    }
+
+    .transaction-details-date {
+        font-family: 'Manrope', monospace;
+    }
+
+    .transaction-details-type {
+        padding: 0.25rem 0.75rem;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .transaction-details-type.income {
+        background: rgba(0, 255, 136, 0.1);
+        color: var(--accent-positive);
+    }
+
+    .transaction-details-type.expense {
+        background: rgba(255, 51, 102, 0.1);
+        color: var(--accent-negative);
+    }
+
+    .transaction-amount-large {
+        font-size: 1.5rem;
+        font-weight: 800;
+        font-family: 'Manrope', monospace;
+        letter-spacing: -0.02em;
+    }
+
+    .transaction-amount-large.income {
+        color: var(--accent-positive);
+    }
+
+    .transaction-amount-large.expense {
+        color: var(--accent-negative);
+    }
+
+    .transaction-delete-btn {
+        padding: 0.625rem 1rem;
+        background-color: transparent;
+        color: var(--text-tertiary);
+        border: 1px solid var(--border-primary);
+        border-radius: 0.625rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+        opacity: 0;
+    }
+
+    .transaction-card:hover .transaction-delete-btn {
+        opacity: 1;
+    }
+
+    .transaction-delete-btn:hover {
+        background-color: var(--accent-negative);
+        border-color: var(--accent-negative);
+        color: var(--text-primary);
+    }
+
+    .transaction-empty-state {
+        text-align: center;
+        padding: 5rem 2rem;
+        color: var(--text-tertiary);
+    }
+
+    .transaction-empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.2;
+    }
+
+    .transaction-empty-state-text {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .transaction-empty-state-subtext {
+        font-size: 0.875rem;
+        opacity: 0.6;
+    }
+
+    @media (max-width: 768px) {
+        .transaction-header-stats {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .transaction-stat-box {
+            padding: 2rem 1.5rem;
+        }
+
+        .transaction-stat-amount {
+            font-size: 2.25rem;
+        }
+
+        .transaction-card {
+            grid-template-columns: auto 1fr;
+            gap: 1rem;
+        }
+
+        .transaction-amount-large {
+            grid-column: 1 / -1;
+            text-align: left;
+            font-size: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .transaction-delete-btn {
+            grid-column: 1 / -1;
+            opacity: 1;
+        }
+    }
+
+    /* Charts */
+    .chart-container {
+        position: relative;
+        height: 320px;
+        width: 100%;
+    }
+
+    /* Allocation - Modern Grid */
+    .allocation-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .allocation-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.5rem;
+        background-color: var(--bg-primary);
+        border-radius: 1rem;
+        border: 1px solid var(--border-primary);
+        transition: all 0.2s;
+    }
+
+    .allocation-item:hover {
+        border-color: var(--border-hover);
+        transform: translateY(-2px);
+    }
+
+    .allocation-color {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 0.75rem;
+        flex-shrink: 0;
+        border: 1px solid var(--border-primary);
+    }
+
+    .allocation-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .allocation-name {
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .allocation-value {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        font-weight: 600;
+        font-family: 'Manrope', monospace;
+    }
+
+    /* Table */
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 0.5rem;
+    }
+
+    thead tr {
+        border: none;
+    }
+
+    th {
+        text-align: left;
+        padding: 0.75rem 1rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--text-tertiary);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border: none;
+    }
+
+    th.right {
+        text-align: right;
+    }
+
+    tbody tr {
+        background-color: var(--bg-primary);
+        border: 1px solid var(--border-primary);
+        transition: all 0.2s;
+    }
+
+    tbody tr:hover {
+        border-color: var(--border-hover);
+        transform: translateX(4px);
+    }
+
+    td {
+        padding: 1.25rem 1rem;
+        border-top: 1px solid var(--border-primary);
+        border-bottom: 1px solid var(--border-primary);
+    }
+
+    td:first-child {
+        border-left: 1px solid var(--border-primary);
+        border-top-left-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+    }
+
+    td:last-child {
+        border-right: 1px solid var(--border-primary);
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+    }
+
+    .td-asset {
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+    .td-category {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .td-value {
+        text-align: right;
+        font-weight: 700;
+        font-size: 0.95rem;
+        font-family: 'Manrope', monospace;
+    }
+
+    .td-change {
+        text-align: right;
+    }
+
+    .td-weight {
+        text-align: right;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        font-weight: 700;
+        font-family: 'Manrope', monospace;
+    }
+
+    .change-positive {
+        color: var(--accent-positive);
+        font-weight: 700;
+        font-size: 0.875rem;
+    }
+
+    .change-neutral {
+        color: var(--text-secondary);
+        font-weight: 700;
+        font-size: 0.875rem;
+    }
+
+    /* Modal */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        padding: 1rem;
+    }
+
+    .modal-content {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        max-width: 500px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .modal-title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin-bottom: 2rem;
+        letter-spacing: -0.02em;
+    }
+
+    .modal-input-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .modal-input, .modal-select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background-color: var(--bg-primary);
+        border: 1px solid var(--border-primary);
+        border-radius: 0.75rem;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+        font-family: inherit;
+        transition: border-color 0.2s;
+    }
+
+    .modal-input:focus, .modal-select:focus {
+        outline: none;
+        border-color: var(--text-primary);
+    }
+
+    .modal-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .modal-button {
+        padding: 0.875rem;
+        border: 1px solid var(--border-primary);
+        border-radius: 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .modal-button-primary {
+        background-color: var(--text-primary);
+        color: var(--bg-primary);
+        border-color: var(--text-primary);
+    }
+
+    .modal-button-primary:hover {
+        opacity: 0.9;
+    }
+
+    .modal-button-secondary {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+    .modal-button-secondary:hover {
+        background-color: var(--bg-card);
+    }
+
+    /* Time Buttons */
+    .time-buttons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .time-button {
+        padding: 0.5rem 1rem;
+        background-color: var(--bg-primary);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: 'Manrope', monospace;
+    }
+
+    .time-button:hover {
+        color: var(--text-primary);
+        border-color: var(--border-hover);
+    }
+
+    .time-button.active {
+        background-color: var(--text-primary);
+        color: var(--bg-primary);
+        border-color: var(--text-primary);
+    }
+
+    /* Footer */
+    .footer {
+        margin-top: var(--spacing-section);
+        padding: 2rem 0;
+        text-align: center;
+        border-top: 1px solid var(--border-primary);
+    }
+
+    .footer-text {
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--border-primary);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--border-hover);
+    }
+
+    /* Animations */
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+        20%, 40%, 60%, 80% { transform: translateX(8px); }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .floating-nav {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+
+    @media (max-width: 768px) {
+        :root {
+            --spacing-section: 4rem;
+        }
+
+        .container {
+            padding: 0 1rem 8rem;
+        }
+
+        .header-wrapper {
+            padding: 0 1rem;
+        }
+
+        .nav-container {
+            bottom: 1rem;
+            width: calc(100% - 2rem);
+        }
+
+        .floating-nav {
+            padding: 0.625rem;
+            gap: 0.375rem;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .transaction-item {
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+        }
+
+        .transaction-delete {
+            grid-column: 1 / -1;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1 class="login-title">PORTFOLIO</h1>
+                <p class="login-subtitle">Enter password to access dashboard</p>
+            </div>
+            <form id="loginForm" class="login-form" onsubmit="return checkPassword(event)">
+                <div class="login-input-group">
+                    <input 
+                        type="password" 
+                        id="passwordInput" 
+                        class="login-input" 
+                        placeholder="Password"
+                        autocomplete="off"
+                        required
+                    >
+                </div>
+                <button type="submit" class="login-button">Unlock</button>
+                <div id="errorMessage" class="error-message hidden">Incorrect password</div>
+            </form>
+        </div>
+    </div>
+
+```
+<!-- Dashboard -->
+<div id="dashboard" class="hidden">
+    <!-- Fixed Header -->
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">PORTFOLIO</div>
+            <button class="header-logout" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Overview Section -->
+        <section id="overview" class="section">
+            <div class="grid grid-3">
+                <div class="card card-highlight">
+                    <div class="card-label">
+                        <span>Net Worth</span>
+                        <button class="card-edit-btn" onclick="toggleCardEdit('netWorth')">✎</button>
+                    </div>
+                    <div class="card-value">
+                        <span class="editable-value" data-field="netWorth" data-card="netWorth" onclick="editValue(this)">£140,000</span>
+                    </div>
+                    <div class="card-subtitle">
+                        <span class="badge">↗ 2.34%</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">
+                        <span>Investment</span>
+                        <button class="card-edit-btn" onclick="toggleCardEdit('investment')">✎</button>
+                    </div>
+                    <div class="card-value">
+                        <span class="editable-value" data-field="investment" data-card="investment" onclick="editValue(this)">£50,000</span>
+                    </div>
+                    <div class="card-subtitle"><span id="investmentPercent">35.7</span>% of portfolio</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">
+                        <span>Reserve</span>
+                        <button class="card-edit-btn" onclick="toggleCardEdit('reserve')">✎</button>
+                    </div>
+                    <div class="card-value">
+                        <span class="editable-value" data-field="reserve" data-card="reserve" onclick="editValue(this)">£90,000</span>
+                    </div>
+                    <div class="card-subtitle"><span id="reservePercent">64.3</span>% of portfolio</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Goals Section -->
+        <section id="goals" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Financial Goal</h2>
+            </div>
+            <div class="goal-card">
+                <div class="goal-header">
+                    <div class="goal-info">
+                        <div class="goal-title" id="goalName">Wealth Target</div>
+                        <div class="goal-amount" id="goalTarget">£200,000</div>
+                    </div>
+                    <button class="goal-edit-btn" onclick="openGoalModal()">Edit Goal</button>
+                </div>
+                
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span class="progress-label">Progress</span>
+                        <span class="progress-percentage" id="progressText">70%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                </div>
+
+                <div class="goal-metrics">
+                    <div class="goal-metric">
+                        <div class="goal-metric-value" id="remainingAmount">£60,000</div>
+                        <div class="goal-metric-label">Remaining</div>
+                    </div>
+                    <div class="goal-metric">
+                        <div class="goal-metric-value" id="monthsRemaining">24</div>
+                        <div class="goal-metric-label">Months Left</div>
+                    </div>
+                    <div class="goal-metric">
+                        <div class="goal-metric-value" id="monthlyTarget">£2,500</div>
+                        <div class="goal-metric-label">Monthly Need</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Transactions Section -->
+        <section id="transactions" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Transactions</h2>
+                <button class="section-button" onclick="openTransactionModal()">Add Transaction</button>
+            </div>
+
+            <!-- Transaction Summary Stats -->
+            <div class="transaction-header-stats">
+                <div class="transaction-stat-box income">
+                    <div class="transaction-stat-label">Total Income</div>
+                    <div class="transaction-stat-amount stat-income" id="totalIncome">£0</div>
+                </div>
+                <div class="transaction-stat-box expense">
+                    <div class="transaction-stat-label">Total Expenses</div>
+                    <div class="transaction-stat-amount stat-expense" id="totalExpenses">£0</div>
+                </div>
+                <div class="transaction-stat-box">
+                    <div class="transaction-stat-label">Net Balance</div>
+                    <div class="transaction-stat-amount stat-net" id="netChange">£0</div>
+                </div>
+            </div>
+
+            <!-- Transaction Cards List -->
+            <div class="transaction-list-modern" id="transactionList">
+                <div class="transaction-empty-state">
+                    <div class="transaction-empty-state-icon">💳</div>
+                    <div class="transaction-empty-state-text">No transactions yet</div>
+                    <div class="transaction-empty-state-subtext">Add your first transaction to get started</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section id="charts" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Performance & Allocation</h2>
+            </div>
+            <div class="grid grid-2">
+                <!-- Performance Chart -->
+                <div class="card">
+                    <div class="section-header" style="margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.125rem; font-weight: 700; margin: 0;">Performance</h3>
+                        <div class="time-buttons">
+                            <button class="time-button" onclick="changeTimeRange('1M')">1M</button>
+                            <button class="time-button" onclick="changeTimeRange('3M')">3M</button>
+                            <button class="time-button" onclick="changeTimeRange('6M')">6M</button>
+                            <button class="time-button active" onclick="changeTimeRange('1Y')">1Y</button>
+                            <button class="time-button" onclick="changeTimeRange('All')">All</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Allocation Chart -->
+                <div class="card">
+                    <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1.5rem;">Allocation</h3>
+                    <div class="chart-container" style="height: 240px;">
+                        <canvas id="allocationChart"></canvas>
+                    </div>
+                    <div class="allocation-grid">
+                        <div class="allocation-item">
+                            <div class="allocation-color" style="background-color: #ffffff;"></div>
+                            <div class="allocation-info">
+                                <div class="allocation-name">Reserve</div>
+                                <div class="allocation-value" id="reserveAlloc">£90,000</div>
+                            </div>
+                        </div>
+                        <div class="allocation-item">
+                            <div class="allocation-color" style="background-color: #00ff88;"></div>
+                            <div class="allocation-info">
+                                <div class="allocation-name">Investment</div>
+                                <div class="allocation-value" id="investmentAlloc">£50,000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Holdings Section -->
+        <section id="holdings" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Holdings</h2>
+            </div>
+            <div class="card">
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Asset</th>
+                                <th>Category</th>
+                                <th class="right">Value</th>
+                                <th class="right">Change</th>
+                                <th class="right">Weight</th>
+                            </tr>
+                        </thead>
+                        <tbody id="holdingsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p class="footer-text">Private Wealth Dashboard</p>
+        </div>
+    </div>
+
+    <!-- Glassmorphism Bottom Navigation -->
+    <div class="nav-container">
+        <nav class="floating-nav">
+            <button class="nav-item active" onclick="scrollToSection('overview')">Overview</button>
+            <button class="nav-item" onclick="scrollToSection('goals')">Goals</button>
+            <button class="nav-item" onclick="scrollToSection('transactions')">Transactions</button>
+            <button class="nav-item" onclick="scrollToSection('charts')">Performance</button>
+        </nav>
+    </div>
+</div>
+
+<!-- Goal Modal -->
+<div id="goalModal" class="modal hidden">
+    <div class="modal-content">
+        <h2 class="modal-title">Set Financial Goal</h2>
+        <div class="modal-input-group">
+            <label class="modal-label">Goal Name</label>
+            <input type="text" id="goalNameInput" class="modal-input" placeholder="Wealth Target" value="Wealth Target">
+        </div>
+        <div class="modal-input-group">
+            <label class="modal-label">Target Amount (£)</label>
+            <input type="number" id="goalAmountInput" class="modal-input" placeholder="200000" value="200000">
+        </div>
+        <div class="modal-input-group">
+            <label class="modal-label">Target Date</label>
+            <input type="date" id="goalDateInput" class="modal-input">
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-button modal-button-secondary" onclick="closeGoalModal()">Cancel</button>
+            <button class="modal-button modal-button-primary" onclick="saveGoal()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Transaction Modal -->
+<div id="transactionModal" class="modal hidden">
+    <div class="modal-content">
+        <h2 class="modal-title">Add Transaction</h2>
+        <div class="modal-input-group">
+            <label class="modal-label">Type</label>
+            <select id="transactionType" class="modal-select">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+            </select>
+        </div>
+        <div class="modal-input-group">
+            <label class="modal-label">Description</label>
+            <input type="text" id="transactionDescription" class="modal-input" placeholder="Salary, Groceries, etc.">
+        </div>
+        <div class="modal-input-group">
+            <label class="modal-label">Amount (£)</label>
+            <input type="number" id="transactionAmount" class="modal-input" placeholder="1000">
+        </div>
+        <div class="modal-input-group">
+            <label class="modal-label">Date</label>
+            <input type="date" id="transactionDate" class="modal-input">
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-button modal-button-secondary" onclick="closeTransactionModal()">Cancel</button>
+            <button class="modal-button modal-button-primary" onclick="saveTransaction()">Add</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CORRECT_PASSWORD = "myportfolio2024";
+    
+    let portfolioData = {
+        netWorth: 140000,
+        investment: 50000,
+        reserve: 90000,
+        goal: { name: "Wealth Target", target: 200000, targetDate: null },
+        transactions: []
+    };
+
+    let editingCards = new Set();
+    let performanceChart = null;
+    let allocationChart = null;
+    let currentTimeRange = '1Y';
+
+    const holdings = [
+        { name: 'High Yield Savings Account', value: 45000, change: 0.8, category: 'Reserve' },
+        { name: 'Premium Bonds', value: 30000, change: 0.0, category: 'Reserve' },
+        { name: 'Easy Access Savings', value: 15000, change: 0.5, category: 'Reserve' },
+        { name: 'Global Equity Fund', value: 25000, change: 4.2, category: 'Investment' },
+        { name: 'S&P 500 ETF', value: 15000, change: 3.8, category: 'Investment' },
+        { name: 'UK Index Fund', value: 10000, change: 2.5, category: 'Investment' }
+    ];
+
+    const performanceData = {
+        '1M': [
+            { month: 'Week 1', value: 137000 },
+            { month: 'Week 2', value: 138000 },
+            { month: 'Week 3', value: 139000 },
+            { month: 'Week 4', value: 140000 }
+        ],
+        '3M': [
+            { month: 'Oct', value: 136000 },
+            { month: 'Nov', value: 138000 },
+            { month: 'Dec', value: 140000 }
+        ],
+        '6M': [
+            { month: 'Jul', value: 133000 },
+            { month: 'Aug', value: 135000 },
+            { month: 'Sep', value: 136500 },
+            { month: 'Oct', value: 137500 },
+            { month: 'Nov', value: 139000 },
+            { month: 'Dec', value: 140000 }
+        ],
+        '1Y': [
+            { month: 'Jan', value: 125000 },
+            { month: 'Feb', value: 127000 },
+            { month: 'Mar', value: 128500 },
+            { month: 'Apr', value: 130000 },
+            { month: 'May', value: 131500 },
+            { month: 'Jun', value: 133000 },
+            { month: 'Jul', value: 134200 },
+            { month: 'Aug', value: 135500 },
+            { month: 'Sep', value: 136800 },
+            { month: 'Oct', value: 138000 },
+            { month: 'Nov', value: 139200 },
+            { month: 'Dec', value: 140000 }
+        ],
+        'All': [
+            { month: '2023 Q1', value: 110000 },
+            { month: '2023 Q2', value: 115000 },
+            { month: '2023 Q3', value: 118000 },
+            { month: '2023 Q4', value: 122000 },
+            { month: '2024 Q1', value: 128000 },
+            { month: '2024 Q2', value: 132000 },
+            { month: '2024 Q3', value: 136000 },
+            { month: '2024 Q4', value: 140000 }
+        ]
+    };
+
+    function loadData() {
+        const saved = localStorage.getItem('portfolioData');
+        if (saved) portfolioData = JSON.parse(saved);
+    }
+
+    function saveData() {
+        localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+    }
+
+    window.onload = function() {
+        loadData();
+        if (sessionStorage.getItem('loggedIn') === 'true') {
+            showDashboard();
+        }
+    };
+
+    function checkPassword(event) {
+        event.preventDefault();
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        if (passwordInput.value === CORRECT_PASSWORD) {
+            sessionStorage.setItem('loggedIn', 'true');
+            showDashboard();
+        } else {
+            errorMessage.classList.remove('hidden');
+            passwordInput.value = '';
+            passwordInput.focus();
+            passwordInput.style.animation = 'shake 0.5s';
+            setTimeout(() => { passwordInput.style.animation = ''; }, 500);
+        }
+        return false;
+    }
+
+    function showDashboard() {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        updateDisplay();
+        initCharts();
+        populateHoldingsTable();
+        updateGoalDisplay();
+        updateTransactionDisplay();
+    }
+
+    function logout() {
+        sessionStorage.removeItem('loggedIn');
+        document.getElementById('dashboard').classList.add('hidden');
+        document.getElementById('loginScreen').classList.remove('hidden');
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('errorMessage').classList.add('hidden');
+        if (performanceChart) performanceChart.destroy();
+        if (allocationChart) allocationChart.destroy();
+    }
+
+    function scrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    }
+
+    function formatCurrency(value) {
+        return new Intl.NumberFormat('en-GB', {
+            style: 'currency',
+            currency: 'GBP',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(value);
+    }
+
+    function updateDisplay() {
+        document.querySelector('[data-field="netWorth"]').textContent = formatCurrency(portfolioData.netWorth);
+        document.querySelector('[data-field="investment"]').textContent = formatCurrency(portfolioData.investment);
+        document.querySelector('[data-field="reserve"]').textContent = formatCurrency(portfolioData.reserve);
+        
+        const investPercent = ((portfolioData.investment / portfolioData.netWorth) * 100).toFixed(1);
+        const reservePercent = ((portfolioData.reserve / portfolioData.netWorth) * 100).toFixed(1);
+        
+        document.getElementById('investmentPercent').textContent = investPercent;
+        document.getElementById('reservePercent').textContent = reservePercent;
+        document.getElementById('reserveAlloc').textContent = formatCurrency(portfolioData.reserve);
+        document.getElementById('investmentAlloc').textContent = formatCurrency(portfolioData.investment);
+    }
+
+    function toggleCardEdit(cardId) {
+        const card = document.querySelector(`[data-card="${cardId}"]`).closest('.card');
+        if (editingCards.has(cardId)) {
+            editingCards.delete(cardId);
+            card.classList.remove('editing');
+            saveData();
+            updateCharts();
+        } else {
+            editingCards.add(cardId);
+            card.classList.add('editing');
+        }
+    }
+
+    function editValue(element) {
+        const cardId = element.getAttribute('data-card');
+        if (!editingCards.has(cardId)) return;
+        
+        const field = element.getAttribute('data-field');
+        const currentValue = portfolioData[field];
+        
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.className = 'value-input';
+        input.value = currentValue;
+        
+        input.onblur = function() {
+            const newValue = parseInt(this.value) || currentValue;
+            portfolioData[field] = newValue;
+            
+            if (field === 'investment' || field === 'reserve') {
+                portfolioData.netWorth = portfolioData.investment + portfolioData.reserve;
+            } else if (field === 'netWorth') {
+                const ratio = portfolioData.investment / (portfolioData.investment + portfolioData.reserve);
+                portfolioData.investment = Math.round(newValue * ratio);
+                portfolioData.reserve = newValue - portfolioData.investment;
+            }
+            
+            updateDisplay();
+            updateGoalDisplay();
+            element.textContent = formatCurrency(portfolioData[field]);
+        };
+        
+        input.onkeypress = function(e) {
+            if (e.key === 'Enter') this.blur();
+        };
+        
+        element.textContent = '';
+        element.appendChild(input);
+        input.focus();
+        input.select();
+    }
+
+    function updateCharts() {
+        if (allocationChart) {
+            allocationChart.data.datasets[0].data = [portfolioData.reserve, portfolioData.investment];
+            allocationChart.update();
+        }
+    }
+
+    function updateGoalDisplay() {
+        const goal = portfolioData.goal;
+        const current = portfolioData.netWorth;
+        const target = goal.target;
+        const remaining = target - current;
+        const progress = (current / target) * 100;
+        
+        document.getElementById('goalName').textContent = goal.name;
+        document.getElementById('goalTarget').textContent = formatCurrency(target);
+        document.getElementById('remainingAmount').textContent = formatCurrency(remaining > 0 ? remaining : 0);
+        document.getElementById('progressText').textContent = Math.min(progress, 100).toFixed(0) + '%';
+        document.getElementById('progressBar').style.width = Math.min(progress, 100) + '%';
+        
+        let monthsLeft = '--';
+        let monthlyNeed = '--';
+        
+        if (goal.targetDate) {
+            const today = new Date();
+            const targetDate = new Date(goal.targetDate);
+            const diffTime = targetDate - today;
+            const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
+            
+            if (diffMonths > 0) {
+                monthsLeft = diffMonths;
+                monthlyNeed = formatCurrency(Math.ceil(remaining / diffMonths));
+            }
+        }
+        
+        document.getElementById('monthsRemaining').textContent = monthsLeft;
+        document.getElementById('monthlyTarget').textContent = monthlyNeed;
+    }
+
+    function openGoalModal() {
+        document.getElementById('goalModal').classList.remove('hidden');
+        document.getElementById('goalNameInput').value = portfolioData.goal.name;
+        document.getElementById('goalAmountInput').value = portfolioData.goal.target;
+        if (portfolioData.goal.targetDate) {
+            document.getElementById('goalDateInput').value = portfolioData.goal.targetDate;
+        }
+    }
+
+    function closeGoalModal() {
+        document.getElementById('goalModal').classList.add('hidden');
+    }
+
+    function saveGoal() {
+        portfolioData.goal.name = document.getElementById('goalNameInput').value;
+        portfolioData.goal.target = parseInt(document.getElementById('goalAmountInput').value);
+        portfolioData.goal.targetDate = document.getElementById('goalDateInput').value;
+        saveData();
+        updateGoalDisplay();
+        closeGoalModal();
+    }
+
+    function openTransactionModal() {
+        document.getElementById('transactionModal').classList.remove('hidden');
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('transactionDate').value = today;
+        document.getElementById('transactionDescription').value = '';
+        document.getElementById('transactionAmount').value = '';
+    }
+
+    function closeTransactionModal() {
+        document.getElementById('transactionModal').classList.add('hidden');
+    }
+
+    function saveTransaction() {
+        const type = document.getElementById('transactionType').value;
+        const description = document.getElementById('transactionDescription').value;
+        const amount = parseFloat(document.getElementById('transactionAmount').value);
+        const date = document.getElementById('transactionDate').value;
+        
+        if (!description || !amount || !date) {
+            alert('Please fill in all fields');
+            return;
+        }
+        
+        portfolioData.transactions.unshift({
+            id: Date.now(),
+            type: type,
+            description: description,
+            amount: amount,
+            date: date
+        });
+        
+        saveData();
+        updateTransactionDisplay();
+        closeTransactionModal();
+    }
+
+    function deleteTransaction(id) {
+        if (confirm('Delete this transaction?')) {
+            portfolioData.transactions = portfolioData.transactions.filter(t => t.id !== id);
+            saveData();
+            updateTransactionDisplay();
+        }
+    }
+
+    function updateTransactionDisplay() {
+        const list = document.getElementById('transactionList');
+        const transactions = portfolioData.transactions;
+        
+        if (transactions.length === 0) {
+            list.innerHTML = `
+                <div class="transaction-empty-state">
+                    <div class="transaction-empty-state-icon">💳</div>
+                    <div class="transaction-empty-state-text">No transactions yet</div>
+                    <div class="transaction-empty-state-subtext">Add your first transaction to get started</div>
+                </div>
+            `;
+        } else {
+            list.innerHTML = transactions.map(t => {
+                const icon = t.type === 'income' ? '↗' : '↘';
+                return `
+                    <div class="transaction-card ${t.type}">
+                        <div class="transaction-icon ${t.type}">${icon}</div>
+                        <div class="transaction-details">
+                            <div class="transaction-details-title">${t.description}</div>
+                            <div class="transaction-details-meta">
+                                <span class="transaction-details-date">${new Date(t.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                <span class="transaction-details-type ${t.type}">${t.type}</span>
+                            </div>
+                        </div>
+                        <div class="transaction-amount-large ${t.type}">
+                            ${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount)}
+                        </div>
+                        <button class="transaction-delete-btn" onclick="deleteTransaction(${t.id})">Delete</button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+        const totalExpenses = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+        const netChange = totalIncome - totalExpenses;
+        
+        document.getElementById('totalIncome').textContent = formatCurrency(totalIncome);
+        document.getElementById('totalExpenses').textContent = formatCurrency(totalExpenses);
+        document.getElementById('netChange').textContent = formatCurrency(netChange);
+        
+        const netElement = document.getElementById('netChange');
+        netElement.className = 'transaction-stat-amount stat-net';
+        if (netChange > 0) {
+            netElement.classList.add('stat-income');
+        } else if (netChange < 0) {
+            netElement.classList.add('stat-expense');
+        }
+    }
+
+    function initCharts() {
+        const perfCtx = document.getElementById('performanceChart');
+        const data = performanceData[currentTimeRange];
+        
+        performanceChart = new Chart(perfCtx, {
+            type: 'line',
+            data: {
+                labels: data.map(d => d.month),
+                datasets: [{
+                    label: 'Portfolio Value',
+                    data: data.map(d => d.value),
+                    borderColor: '#00ff88',
+                    backgroundColor: 'rgba(0, 255, 136, 0.05)',
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: '#00ff88',
+                    pointHoverBorderColor: '#000',
+                    pointHoverBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#0a0a0a',
+                        borderColor: '#1a1a1a',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: false,
+                        titleFont: { size: 11, family: "'Manrope', monospace" },
+                        bodyFont: { size: 13, family: "'Manrope', monospace", weight: 'bold' },
+                        callbacks: {
+                            label: function(context) {
+                                return formatCurrency(context.parsed.y);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: '#1a1a1a', drawBorder: false },
+                        ticks: { color: '#4d4d4d', font: { size: 10, family: "'Manrope', monospace" } }
+                    },
+                    y: {
+                        grid: { color: '#1a1a1a', drawBorder: false },
+                        ticks: {
+                            color: '#4d4d4d',
+                            font: { size: 10, family: "'Manrope', monospace" },
+                            callback: function(value) {
+                                return '£' + (value / 1000) + 'k';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const allocCtx = document.getElementById('allocationChart');
+        
+        allocationChart = new Chart(allocCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Reserve', 'Investment'],
+                datasets: [{
+                    data: [portfolioData.reserve, portfolioData.investment],
+                    backgroundColor: ['#ffffff', '#00ff88'],
+                    borderColor: '#000',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#0a0a0a',
+                        borderColor: '#1a1a1a',
+                        borderWidth: 1,
+                        padding: 12,
+                        bodyFont: { size: 13, family: "'Manrope', monospace", weight: 'bold' },
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = formatCurrency(context.parsed);
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function changeTimeRange(range) {
+        currentTimeRange = range;
+        document.querySelectorAll('.time-button').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        const data = performanceData[range];
+        performanceChart.data.labels = data.map(d => d.month);
+        performanceChart.data.datasets[0].data = data.map(d => d.value);
+        performanceChart.update();
+    }
+
+    function populateHoldingsTable() {
+        const tbody = document.getElementById('holdingsTable');
+        const totalValue = portfolioData.netWorth;
+        
+        holdings.forEach(holding => {
+            const tr = document.createElement('tr');
+            const weight = ((holding.value / totalValue) * 100).toFixed(1);
+            const changeClass = holding.change > 0 ? 'change-positive' : holding.change < 0 ? 'change-negative' : 'change-neutral';
+            const changeSymbol = holding.change > 0 ? '↗ +' : holding.change < 0 ? '↘ ' : '';
+            const changeText = holding.change !== 0 ? changeSymbol + holding.change.toFixed(1) + '%' : '—';
+            
+            tr.innerHTML = `
+                <td class="td-asset">${holding.name}</td>
+                <td class="td-category">${holding.category}</td>
+                <td class="td-value">${formatCurrency(holding.value)}</td>
+                <td class="td-change"><span class="${changeClass}">${changeText}</span></td>
+                <td class="td-weight">${weight}%</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    window.addEventListener('scroll', () => {
+        const sections = ['overview', 'goals', 'transactions', 'charts'];
+        let currentSection = '';
+        
+        sections.forEach(sectionId => {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 200 && rect.bottom >= 200) {
+                    currentSection = sectionId;
+                }
+            }
+        });
+        
+        if (currentSection) {
+            document.querySelectorAll('.nav-item').forEach((item, index) => {
+                item.classList.remove('active');
+                if (sections[index] === currentSection) {
+                    item.classList.add('active');
+                }
+            });
+        }
+    });
+</script>
+```
+
+</body>
+</html>
